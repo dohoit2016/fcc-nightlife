@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>FCC Nightlife</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<% include header %>
+	</head>
+	<body>
+		<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-offset-2 col-md-offset-2">
+			<% include nav %>
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-offset-2 col-md-offset-2">
+			<div class="container-fluid" id="root">
+			</div>
+		</div>
+		<script>
+			function ob (x) {
+				return document.getElementById(x);
+			}
+		</script>
+		<script type="text/javascript">
+		</script>
+
+
+
+		<script type="text/babel">
+			var SearchForm = React.createClass({
+				render(){
+					return (
+						<div className="row">
+							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10"><input type="search" name="location" id="location" className="form-control" placeholder="Search" /></div>
+							<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2"><button type="button" id="btnSearch" className="btn btn-primary" onClick={this.handleUserInput}>Search</button></div>
+						</div>
+					)
+				},
+				handleUserInput(){
+					this.props.onUserSearch([]);
+					$.ajax({
+						url: '/api/search?term=food&location=' + ob('location').value,
+						type: 'GET',
+						success: function (data) {
+							console.log('ok');
+							this.props.onUserSearch(data);
+						}.bind(this),
+						error: function (err) {
+							console.log(err);
+						}
+					})
+				}
+			});
+
+			var Bar = React.createClass({
+				render(){
+					return (
+						<div className="row">
+							<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col">
+								<img src={this.props.bar.image_url} className="img-responsive" />
+							</div>
+							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+								<div className="container-fluid">
+									<div className="row">
+										<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+											<span>{this.props.bar.name}</span>
+										</div>
+										<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+											<p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title="Go"><span>{this.state.going}</span> Going</p>
+										</div>
+									</div>
+									<div className="row">
+										<div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+											<span>{this.props.bar.snippet_text}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					)
+				},
+				getInitialState(){
+					return {
+						going: 0,
+						willGo: false
+					}
+				},
+				componentDidMount(){
+					$.ajax({
+						url: '/api/get/getNumberGoing?yelpId=' + this.props.bar.id,
+						type: 'GET',
+						success: function (data) {
+							this.setState({
+								going: parseInt(data.count),
+								willGo: data.willGo
+							});
+							$('[data-toggle="tooltip"]').tooltip();
+						}.bind(this),
+						error: function (err) {
+							console.log(err);
+						}
+					})
+				},
+				handleClickGoing(){
+				<% if (user) { %>
+					this.setState({
+						going: this.state.going + (this.state.willGo ? -1 : 1),
+						willGo: !(this.state.willGo)
+					});
+					$.ajax({
+						url: '/api/markBar/?yelpId=' + this.props.bar.id,
+						type: 'GET',
+						success: function (data) {
+							this.setState({
+								going: parseInt(data.count),
+								willGo: data.willGo
+							});
+							$('[data-toggle="tooltip"]').tooltip();
+						}.bind(this),
+						error: function (err) {
+							console.log(err);
+						}
+					})
+				<% } %>
+				}
+
+			});
+
+			var BarsList = React.createClass({
+				render(){
+					var bars = this.props.bars;
+					var rows = [];
+					bars.forEach(function (val) {
+						rows.push(<Bar bar={val} key={val.id}/>);
+					});
+					return (
+						<div className="row">
+							{rows}
+						</div>
+					)
+				}
+			})
+			var App = React.createClass({
+				getInitialState(){
+					return {
+						bars: []
+					}
+				},
+				render(){
+					return (
+						<div>
+							<SearchForm onUserSearch={this.handleSearch} />
+							<BarsList bars={this.state.bars} />
+						</div>
+					)
+				},
+				handleSearch(data){
+					this.setState({
+						bars: data
+					});
+				},
+				componentDidMount(){
+					<% if (user && user.lastLocation && user.lastLocation.length > 0) { %>
+						$('#location').val(<%- JSON.stringify(user.lastLocation) %>);
+						$('#btnSearch').click();
+					<% } %>
+				}
+			})
+			ReactDOM.render(<App />, ob('root'));
+		</script>
+		<script>
+
+		</script>
+	</body>
+</html>
