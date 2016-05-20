@@ -52,10 +52,10 @@
 			var Bar = React.createClass({
 				render(){
 					<% if (user) { %>
-					var badge = <p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span>{this.state.going}</span> Going</p>
+					var badge = <button onClick={this.handleClickGoing} className={"going btn " + (this.state.willGo ? "btn-success" : "btn-primary")} data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span className="badge">{this.state.going}</span> Going</button>
 					<% } else { %>
 						var badge = <a href="/auth/facebook">
-						<p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span>{this.state.going}</span> Going</p>
+						<button onClick={this.handleClickGoing} className={"going btn " + (this.state.willGo ? "btn-success" : "btn-primary")} data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span className="badge">{this.state.going}</span> Going</button>
 						</a>
 					<% } %>
 					return (
