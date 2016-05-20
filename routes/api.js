@@ -11,10 +11,14 @@ router.get('/search', function(req, res, next) {
 	var a = req.query.api;
 
 	var yelp = new Yelp({
-		consumer_key: 'DZXWLWvVrHY3oF4i-FttpA',
-		consumer_secret: 'TTYcQhebNDoskoJbN1B9hDhANCM',
-		token: 'UlsXPT9K2ONJYjyki_sQKfaaf4htG2lH',
-		token_secret: 'Or-dPEHJ0Gt8I2LoezWIEXaq21M',
+		// consumer_key: 'DZXWLWvVrHY3oF4i-FttpA',
+		// consumer_secret: 'TTYcQhebNDoskoJbN1B9hDhANCM',
+		// token: 'UlsXPT9K2ONJYjyki_sQKfaaf4htG2lH',
+		// token_secret: 'Or-dPEHJ0Gt8I2LoezWIEXaq21M',
+		consumer_key: process.env.YELP_CONSUMER_KEY,
+		consumer_secret: process.env.YELP_CONSUMER_SECRET,
+		token: process.env.YELP_TOKEN,
+		token_secret: process.env.YELP_TOKEN_SECRET,
 	});
 
 	yelp.search({ term: 'food', location: l })
