@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<title>FCC Nightlife</title>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
 		<% include header %>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
 	</head>
 	<body>
 		<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-offset-2 col-md-offset-2">
@@ -28,8 +28,8 @@
 				render(){
 					return (
 						<div className="row">
-							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10"><input type="search" name="location" id="location" className="form-control" placeholder="Search" /></div>
-							<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2"><button type="button" id="btnSearch" className="btn btn-primary" onClick={this.handleUserInput}>Search</button></div>
+							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10 text-left col"><input type="search" name="location" id="location" className="form-control" placeholder="Search" /></div>
+							<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right col"><button type="button" id="btnSearch" className="btn btn-primary" onClick={this.handleUserInput}>Search</button></div>
 						</div>
 					)
 				},
@@ -51,10 +51,17 @@
 
 			var Bar = React.createClass({
 				render(){
+					<% if (user) { %>
+					var badge = <p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span>{this.state.going}</span> Going</p>
+					<% } else { %>
+						var badge = <a href="/auth/facebook">
+						<p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title={this.state.willGo ? "Remove" : "Go"}><span>{this.state.going}</span> Going</p>
+						</a>
+					<% } %>
 					return (
-						<div className="row">
+						<div className="row bar">
 							<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col">
-								<img src={this.props.bar.image_url} className="img-responsive" />
+								<img src={this.props.bar.image_url} className="img-responsive img-circle" />
 							</div>
 							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 								<div className="container-fluid">
@@ -63,12 +70,12 @@
 											<span>{this.props.bar.name}</span>
 										</div>
 										<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-											<p onClick={this.handleClickGoing} className="going text-center text-success badge badge-span" data-toggle="tooltip" title="Go"><span>{this.state.going}</span> Going</p>
+											{badge}
 										</div>
 									</div>
 									<div className="row">
 										<div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-											<span>{this.props.bar.snippet_text}</span>
+											<blockquote><i>{this.props.bar.snippet_text}</i></blockquote>
 										</div>
 									</div>
 								</div>
@@ -91,7 +98,7 @@
 								going: parseInt(data.count),
 								willGo: data.willGo
 							});
-							$('[data-toggle="tooltip"]').tooltip();
+							$('[data-toggle="tooltip"]').tooltip('hide').tooltip('fixTitle').tooltip();
 						}.bind(this),
 						error: function (err) {
 							console.log(err);
@@ -100,10 +107,17 @@
 				},
 				handleClickGoing(){
 				<% if (user) { %>
+
+					// change state && change tooltip title immediately so it feels fast.
 					this.setState({
 						going: this.state.going + (this.state.willGo ? -1 : 1),
 						willGo: !(this.state.willGo)
 					});
+
+					// state must be changed before tooltip title.
+					$('[data-toggle="tooltip"]').tooltip('hide').tooltip('fixTitle').tooltip();
+
+					// and then update database, fix tooltip title & state.
 					$.ajax({
 						url: '/api/markBar/?yelpId=' + this.props.bar.id,
 						type: 'GET',
@@ -112,7 +126,7 @@
 								going: parseInt(data.count),
 								willGo: data.willGo
 							});
-							$('[data-toggle="tooltip"]').tooltip();
+							$('[data-toggle="tooltip"]').tooltip('hide').tooltip('fixTitle').tooltip();
 						}.bind(this),
 						error: function (err) {
 							console.log(err);
@@ -131,7 +145,7 @@
 						rows.push(<Bar bar={val} key={val.id}/>);
 					});
 					return (
-						<div className="row">
+						<div className="well">
 							{rows}
 						</div>
 					)

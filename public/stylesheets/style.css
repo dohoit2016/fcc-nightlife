@@ -9,10 +9,22 @@ a {
 
 .row{
 	margin-bottom: 20px;
-	margin: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
 	padding-left: 0px;
+}
+
+.bar{
+	border: 1px solid #999;
+	border-radius: 20px;
+	padding: 10px;
 }
 
 p.going{
 	cursor: pointer;
+}
+
+.col{
+	padding-left: 0px;
+	padding-right: 0px;
 }
