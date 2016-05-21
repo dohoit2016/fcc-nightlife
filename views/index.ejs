@@ -28,8 +28,8 @@
 				render(){
 					return (
 						<div className="row">
-							<div className="col-xs-12 col-sm-12 col-md-10 col-lg-10 text-left col"><input type="search" name="location" id="location" className="form-control" placeholder="Search" /></div>
-							<div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 text-right col"><button type="button" id="btnSearch" className="btn btn-primary" onClick={this.handleUserInput}>Search</button></div>
+							<div className="col-xs-12 col-sm-10 col-md-10 col-lg-10 text-left col"><input type="search" name="location" id="location" className="form-control" placeholder="Search" /></div>
+							<div className="col-xs-12 col-sm-2 col-md-2 col-lg-2 text-right col"><button type="button" id="btnSearch" className="btn btn-primary" onClick={this.handleUserInput}>Search</button></div>
 						</div>
 					)
 				},
@@ -66,10 +66,10 @@
 							<div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 								<div className="container-fluid">
 									<div className="row">
-										<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+										<div className="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 											<span>{this.props.bar.name}</span>
 										</div>
-										<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+										<div className="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 											{badge}
 										</div>
 									</div>
