@@ -9,6 +9,10 @@ var Bar = mongoose.model('Bar');
 router.get('/search', function(req, res, next) {
 	var l = req.query.location;
 	var a = req.query.api;
+	var t = req.query.term;
+	if ((typeof(t) == 'undefined') || (t.length < 1)){
+		t = 'bar';
+	}
 
 	var yelp = new Yelp({
 		consumer_key: process.env.YELP_CONSUMER_KEY,
@@ -17,7 +21,7 @@ router.get('/search', function(req, res, next) {
 		token_secret: process.env.YELP_TOKEN_SECRET,
 	});
 
-	yelp.search({ term: 'food', location: l })
+	yelp.search({ term: t, location: l })
 		.then(function (data) {
 			console.log(data.businesses.length);
 			if (a == 1){

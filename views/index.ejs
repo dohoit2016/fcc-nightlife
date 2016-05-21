@@ -36,7 +36,7 @@
 				handleUserInput(){
 					this.props.onUserSearch([]);
 					$.ajax({
-						url: '/api/search?term=food&location=' + ob('location').value,
+						url: '/api/search?term=bar&location=' + ob('location').value,
 						type: 'GET',
 						success: function (data) {
 							console.log('ok');
